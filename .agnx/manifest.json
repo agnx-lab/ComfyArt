@@ -1,0 +1,46 @@
+{
+  "id": "comfyart",
+  "name": "ComfyArt",
+  "version": "0.1.0",
+  "description": "ComfyArt AI 设计画布（ComfyUI 自定义节点）。嵌入正在运行的 ComfyUI（127.0.0.1:8188）的 /comfyart/ 页面，不代管 ComfyUI 生命周期。",
+  "engines": {
+    "agnx": ">=1.0.0"
+  },
+  "main": "./dist/index.js",
+  "icon": "./.agnx/icon.svg",
+  "sidecar": {
+    "supervised": true,
+    "ensureTool": ".agnx/tools/ensure-comfyart.mjs",
+    "stateFile": "comfyart.json",
+    "defaultPort": 8188,
+    "lifecycle": "lazy",
+    "label": "ComfyUI"
+  },
+  "guest": {
+    "kind": "web",
+    "auth": "none",
+    "capabilities": [
+      "websocket"
+    ],
+    "preferStrategy": "auto"
+  },
+  "platforms": {
+    "desktop": "supported",
+    "web": "supported",
+    "mobile": "unsupported"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "id": "comfyart.open",
+        "title": "ComfyArt"
+      }
+    ],
+    "panels": [
+      {
+        "id": "comfyart.main",
+        "title": "ComfyArt"
+      }
+    ]
+  }
+}

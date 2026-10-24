@@ -1,0 +1,10 @@
+{
+  "appId": "comfyart",
+  "installState": "installed",
+  "launchMode": "packaged",
+  "source": {
+    "kind": "github",
+    "url": "https://github.com/jtydhr88/ComfyArt"
+  },
+  "updatedAt": "2026-10-22T21:11:47.000Z"
+}

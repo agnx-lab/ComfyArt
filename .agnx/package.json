@@ -1,0 +1,26 @@
+{
+  "name": "@agnx-sub/comfyart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agnx 外置子应用：ComfyArt（ComfyUI 自定义节点）画布，嵌入 ComfyUI 托管的 /comfyart/",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node ./scripts/build.mjs",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@agnx-lab/app-sdk": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-unistyles": "*"
+  },
+  "peerDependenciesMeta": {
+    "@agnx-lab/app-sdk": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

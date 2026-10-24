@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@getagnx/app-sdk": [
+        "../../../../Documents/github/agnx/packages/app-sdk/src/index.ts"
+      ],
+      "react": [
+        "../../../../Documents/github/agnx/node_modules/@types/react/index.d.ts"
+      ],
+      "react/jsx-runtime": [
+        "../../../../Documents/github/agnx/node_modules/@types/react/jsx-runtime.d.ts"
+      ]
+    },
+    "typeRoots": [
+      "/Users/apple/Documents/github/agnx/node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}
