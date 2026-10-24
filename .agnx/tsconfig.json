@@ -12,22 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": [],
-    "baseUrl": ".",
-    "paths": {
-      "@getagnx/app-sdk": [
-        "../../../../Documents/github/agnx/packages/app-sdk/src/index.ts"
-      ],
-      "react": [
-        "../../../../Documents/github/agnx/node_modules/@types/react/index.d.ts"
-      ],
-      "react/jsx-runtime": [
-        "../../../../Documents/github/agnx/node_modules/@types/react/jsx-runtime.d.ts"
-      ]
-    },
-    "typeRoots": [
-      "/Users/apple/Documents/github/agnx/node_modules/@types"
-    ]
+    "types": []
   },
   "include": [
     "src/**/*.ts",
