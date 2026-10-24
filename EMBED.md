@@ -1,6 +1,6 @@
 # ComfyArt 融入 Agnx — 嵌入分析（EMBED.md）
 
-> 上游：`ComfyUI/custom_nodes/ComfyArt`（本机取自 `/Users/apple/Downloads/ComfyArt-main`，MIT；`bot/`+`api/` 改编自 ComfyTV(MIT)）。
+> 上游：`ComfyUI/custom_nodes/ComfyArt`（本机取自 `~/Downloads/ComfyArt-main`，MIT；`bot/`+`api/` 改编自 ComfyTV(MIT)）。
 > 上游仓库：https://github.com/jtydhr88/ComfyArt
 > 本文档是**准入分析**，不是完成声明。落地进度见文末「落地切片与验收」。
 
@@ -342,17 +342,17 @@ curl -sSI http://127.0.0.1:8188/ | grep -iE "x-frame-options|content-security-po
 
 ## ⑨ 实测记录
 
-> 本机现状（截至撰写）：`lsof -i:8188` **无监听**；`/Users/apple/Downloads/ComfyUI-master`（ComfyUI **0.18.1**）存在但**从未安装 Python 依赖**（无 venv、`aiohttp` 未装）。
+> 本机现状（截至撰写）：`lsof -i:8188` **无监听**；`~/Downloads/ComfyUI-master`（ComfyUI **0.18.1**）存在但**从未安装 Python 依赖**（无 venv、`aiohttp` 未装）。
 > 实测手段：在 `/tmp/comfy-probe/.venv`（Python 3.12）里 `uv pip install -r requirements.txt` **试装 ComfyUI 依赖**，把 `ComfyArt-main` **软链**到 `custom_nodes/ComfyArt`，再以 `--cpu --port 8188` 启动，仅用于**测量响应头与水印**。
-> **重要边界**：这次试装**仅在 /tmp 下的探针环境里做**，**不写 Agnx 仓库、不装进 `~/.agnx-dev`、不作为子应用的自动安装能力**。子应用的 `ensure-comfyart.mjs` **只探活、不安装**。
+> **重要边界**：这次试装**仅在 /tmp 下的探针环境里做**，**不写 Agnx 仓库、不装进 `$AGNX_HOME`、不作为子应用的自动安装能力**。子应用的 `ensure-comfyart.mjs` **只探活、不安装**。
 
 ### 9.1 实测环境
 
 | 项 | 值 |
 |---|---|
 | 日期 | 2026-10-19 |
-| ComfyUI | `/Users/apple/Downloads/ComfyUI-master`（`comfyui_version` 0.18.1） |
-| ComfyArt | `/Users/apple/Downloads/ComfyArt-main`，软链到 `custom_nodes/ComfyArt` |
+| ComfyUI | `~/Downloads/ComfyUI-master`（`comfyui_version` 0.18.1） |
+| ComfyArt | `~/Downloads/ComfyArt-main`，软链到 `custom_nodes/ComfyArt` |
 | 运行时 | `/tmp/comfy-probe/.venv`（Python 3.12.12）+ `aiohttp 3.14.5`、`pyyaml`、`Pillow`、`numpy` |
 | 探针脚本 | `/tmp/comfy-probe/mini_comfy_server.py`（逐字复刻 ComfyUI `server.py` 的 `cache_control` + `create_origin_only_middleware` 中间件栈、路由注册方式与 `/userdata` 接口） |
 | 浏览器 | Playwright 1.58.2 `chromium_headless_shell-1228` |
@@ -467,9 +467,9 @@ document.querySelector('[data-testid="tl-watermark-unlicensed"]').outerHTML
 上游源码实测确认**全部使用相对路径**，无硬编码 `127.0.0.1:8188`：
 
 ```
-$ grep -rn "127.0.0.1\|localhost" /Users/apple/Downloads/ComfyArt-main/src/*.ts /Users/apple/Downloads/ComfyArt-main/src/*.tsx
+$ grep -rn "127.0.0.1\|localhost" ~/Downloads/ComfyArt-main/src/*.ts ~/Downloads/ComfyArt-main/src/*.tsx
 （无输出）
-$ grep -rn "new URL(" /Users/apple/Downloads/ComfyArt-main/src/*.ts
+$ grep -rn "new URL(" ~/Downloads/ComfyArt-main/src/*.ts
 src/comfy.ts:60   const q = new URL(src, location.origin).searchParams
 src/notices.ts:17 return new URL(location.href).searchParams.get('project') ?? ''
 src/projects.ts:78/89  new URL(location.pathname, location.origin)
@@ -631,7 +631,7 @@ pip install -r ComfyArt-main/requirements.txt（只需要 pypdfium2），重启 
 - 推荐模式：**Wrap + Sidecar（探活型）**。sidecar 不代管 ComfyUI 生命周期，只回答「8188 上有没有能用的 ComfyArt」
 - 挂载：`guest.kind=web` / `guest.auth=none` / `preferStrategy=auto` → 桌面解析为 **`direct-iframe`**（实测为**跨域 OOPIF `<iframe>`**，非 `<webview>`）；网页端因 loopback 快捷键 relay 升格为 **`proxied-iframe`**
 - **实测关键**：`origin` 的主机名必须与宿主页 hostname 一致（都 `localhost` 或都 `127.0.0.1`），否则被 ComfyUI `origin_only` 中间件 403 → 白屏（§9.6.1）
-- 上游：`ComfyUI/custom_nodes/ComfyArt`（本机 `/Users/apple/Downloads/ComfyArt-main`），ComfyUI `0.18.1`（`/Users/apple/Downloads/ComfyUI-master`）
+- 上游：`ComfyUI/custom_nodes/ComfyArt`（本机 `~/Downloads/ComfyArt-main`），ComfyUI `0.18.1`（`~/Downloads/ComfyUI-master`）
 - Port 切片：**（无）**。本期不迁任何 Python 代码，只迁路由契约（`/comfyart/`、`/comfyart/assets/*`、`/comfyart/workflows/{name}`、`/comfyart/bot/*`、`/comfyart/settings`、`/comfyart/mcp`、`/comfyart/pdf`）
 - 默认值：`sidecar.lifecycle=lazy`、`sidecar.supervised=true`、`sidecar.defaultPort=8188`、`sidecar.stateFile=comfyart.json`、`platforms.mobile=unsupported`、`iframeShortcutCapture=true`
 
